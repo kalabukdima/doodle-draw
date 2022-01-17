@@ -1,0 +1,13 @@
+body {
+	padding-bottom: 3rem;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: orange;
+}
+html, body {
+    overflow: hidden;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+canvas{
+    background-color: white;
+}
