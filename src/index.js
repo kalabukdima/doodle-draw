@@ -1,22 +1,21 @@
-const app = require('express')();
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
+const express = require('express');
+const app = express();
+const http = require('http');
+const server = http.createServer(app);
+
+const io = require('socket.io')(server);
 const path = require('path');
+
 const port = process.env.PORT || 3000;
 
-const staticPath = path.join(__dirname, '/static');
+const staticPath = "static";
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(staticPath, 'index.html'))
+  res.sendFile(path.join(staticPath, "index.html"), { root: path.join(__dirname, "..") });
 });
-app.get('/client.js', (req, res) => {
-  res.sendFile(path.join(staticPath, 'client.js'))
-});
-app.get('/client.css', (req, res) => {
-  res.sendFile(path.join(staticPath, 'client.css'))
-});
+app.use(express.static(staticPath));
 
-http.listen(port, () => {
+server.listen(port, () => {
   console.log(`Socket.IO server running at http://localhost:${port}/`);
 });
 
