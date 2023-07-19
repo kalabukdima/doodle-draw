@@ -17,7 +17,7 @@ class ActiveState extends State {
     }
 
     onNewPos(data) {
-        const newPos = {x: data.x, y: data.y};
+        const newPos = {x: data.x * 800, y: data.y * 800};
         this.context.beginPath();
         this.context.moveTo(this.lastPos.x, this.lastPos.y);
         this.context.lineTo(newPos.x, newPos.y);

@@ -20,7 +20,7 @@ server.listen(port, () => {
 });
 
 setInterval(() => {
-  io.emit("coords", {"x": Math.random(), "y": Math.random()})
+  io.emit("new_pos", { "x": Math.random(), "y": Math.random() })
 }, 1000);
 
 let clientA = null;
@@ -30,9 +30,12 @@ let clientB = null;
 io.on('connection', (socket) => {
   if (clientA == null) {
     clientA = socket;
+    clientA.emit("init", { pos: { x: 0, y: 0 } });
   } else if (clientB == null) {
     clientB = socket;
+    clientB.emit("init", { pos: { x: 0, y: 0 } });
   } else {
+    console.error("Too many clients connected");
     return;
   }
 
