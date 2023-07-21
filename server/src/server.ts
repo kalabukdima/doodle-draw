@@ -1,26 +1,14 @@
-import http from 'http';
 import { ClientToServerEvents, ServerToClientEvents } from "@lib/events";
-import express, { Express } from 'express';
 import socketio from 'socket.io';
 
 
 const port = process.env.PORT ? parseInt(process.env.PORT) : 3000;
-const staticPath = "static";
 
-const app: Express = express();
-const server = http.createServer(app);
-
-app.use(express.static(staticPath));
-
-server.listen(port, () => {
-  console.log(`Socket.IO server running at http://localhost:${port}/`);
-});
-
-
-const io = new socketio.Server<ClientToServerEvents, ServerToClientEvents>(server, {
+const io = new socketio.Server<ClientToServerEvents, ServerToClientEvents>({
   cors: {
     origin: "*",
   },
+  serveClient: false,
 });
 
 setInterval(() => {
@@ -45,3 +33,6 @@ io.on('connection', (socket) => {
     return;
   }
 })
+
+io.listen(port);
+console.log(`Socket.IO server running at http://localhost:${port}/`);
