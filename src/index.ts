@@ -17,7 +17,11 @@ server.listen(port, () => {
 });
 
 
-const io = new socketio.Server<ClientToServerEvents, ServerToClientEvents>(server);
+const io = new socketio.Server<ClientToServerEvents, ServerToClientEvents>(server, {
+  cors: {
+    origin: "*",
+  },
+});
 
 setInterval(() => {
   io.emit("new_pos", { x: Math.random(), y: Math.random() });

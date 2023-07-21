@@ -2,8 +2,6 @@ import * as socketio from "socket.io-client";
 import { Position, Direction, InitParams, ClientToServerEvents, ServerToClientEvents } from "../src/events";
 
 type Socket = socketio.Socket<ServerToClientEvents, ClientToServerEvents>;
-// exposed from the "/socket.io/socket.io.js"
-declare function io(): Socket;
 
 interface State {
     onNewPos: (data: Position) => void;
@@ -51,7 +49,7 @@ class ActiveState implements State {
 }
 
 function run() {
-    const socket: Socket = io();
+    const socket: Socket = socketio.io("http://localhost:3000");
 
     const canvas = document.querySelector("canvas")!;
     canvas.width = window.innerWidth;
