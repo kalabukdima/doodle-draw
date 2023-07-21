@@ -1,16 +1,16 @@
-const express = require('express');
-const app = express();
-const http = require('http');
-const server = http.createServer(app);
+import path from 'path';
+import http from 'http';
+import express, { Express, Request, Response } from 'express';
+import socketio from 'socket.io';
 
-const io = require('socket.io')(server);
-const path = require('path');
 
-const port = process.env.PORT || 3000;
-
+const port = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 const staticPath = "static";
 
-app.get('/', (req, res) => {
+const app: Express = express();
+const server = http.createServer(app);
+
+app.get('/', (req: Request, res: Response) => {
   res.sendFile(path.join(staticPath, "index.html"), { root: path.join(__dirname, "..") });
 });
 app.use(express.static(staticPath));
@@ -19,26 +19,25 @@ server.listen(port, () => {
   console.log(`Socket.IO server running at http://localhost:${port}/`);
 });
 
+
+const io = new socketio.Server(server);
+
 setInterval(() => {
   io.emit("new_pos", { "x": Math.random(), "y": Math.random() })
 }, 1000);
 
-let clientA = null;
-let clientB = null;
-
+let clientA: socketio.Socket | undefined;
+let clientB: socketio.Socket | undefined;
 
 io.on('connection', (socket) => {
-  if (clientA == null) {
+  if (!clientA) {
     clientA = socket;
     clientA.emit("init", { pos: { x: 0, y: 0 } });
-  } else if (clientB == null) {
+  } else if (!clientB) {
     clientB = socket;
     clientB.emit("init", { pos: { x: 0, y: 0 } });
   } else {
     console.error("Too many clients connected");
     return;
   }
-
-
-
 })

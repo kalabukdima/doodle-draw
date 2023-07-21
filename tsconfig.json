@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ES2015",
+    "lib": ["ES2015"],
+    "module": "CommonJS",
+    "esModuleInterop": true,
+    "isolatedModules": true,
+
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
+  },
+  "include": ["src/**/*.ts"]
+}
