@@ -1,6 +1,6 @@
-import path from 'path';
 import http from 'http';
-import express, { Express, Request, Response } from 'express';
+import { ClientToServerEvents, ServerToClientEvents } from "./events";
+import express, { Express } from 'express';
 import socketio from 'socket.io';
 
 
@@ -10,9 +10,6 @@ const staticPath = "static";
 const app: Express = express();
 const server = http.createServer(app);
 
-app.get('/', (req: Request, res: Response) => {
-  res.sendFile(path.join(staticPath, "index.html"), { root: path.join(__dirname, "..") });
-});
 app.use(express.static(staticPath));
 
 server.listen(port, () => {
@@ -20,22 +17,25 @@ server.listen(port, () => {
 });
 
 
-const io = new socketio.Server(server);
+const io = new socketio.Server<ClientToServerEvents, ServerToClientEvents>(server);
 
 setInterval(() => {
-  io.emit("new_pos", { "x": Math.random(), "y": Math.random() })
+  io.emit("new_pos", { x: Math.random(), y: Math.random() });
 }, 1000);
 
-let clientA: socketio.Socket | undefined;
-let clientB: socketio.Socket | undefined;
+type MapValue<T> = T extends Map<any, infer V> ? V : never;
+type Socket = MapValue<typeof io.sockets.sockets>;
+
+let clientA: Socket | undefined;
+let clientB: Socket | undefined;
 
 io.on('connection', (socket) => {
   if (!clientA) {
     clientA = socket;
-    clientA.emit("init", { pos: { x: 0, y: 0 } });
+    clientA.emit("init", { pos: { x: 0, y: 0 }, allowed: [] });
   } else if (!clientB) {
     clientB = socket;
-    clientB.emit("init", { pos: { x: 0, y: 0 } });
+    clientB.emit("init", { pos: { x: 0, y: 0 }, allowed: [] });
   } else {
     console.error("Too many clients connected");
     return;

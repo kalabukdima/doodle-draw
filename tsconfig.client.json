@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ES2015",
+    "lib": ["ES2015", "DOM"],
+    "module": "ES2015",
+    "esModuleInterop": true,
+    "moduleResolution": "Bundler",
+
+    "rootDir": "./client",
+    "outDir": "./static/dist",
+
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
+  },
+  "include": ["client/**/*.ts"]
+}
