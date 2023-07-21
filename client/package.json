@@ -1,0 +1,17 @@
+{
+  "name": "doodle-draw",
+  "version": "0.0.1",
+  "description": "Sample socket.io game client",
+  "dependencies": {
+    "socket.io-client": "^4.7.1"
+  },
+  "scripts": {
+    "clean": "rm -rfv ./dist/",
+    "build": "parcel build src/index.html",
+    "dev": "parcel serve src/index.html"
+  },
+  "devDependencies": {
+    "buffer": "^6.0.3",
+    "parcel": "^2.9.3"
+  }
+}

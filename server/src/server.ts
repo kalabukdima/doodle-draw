@@ -1,5 +1,5 @@
 import http from 'http';
-import { ClientToServerEvents, ServerToClientEvents } from "./events";
+import { ClientToServerEvents, ServerToClientEvents } from "@lib/events";
 import express, { Express } from 'express';
 import socketio from 'socket.io';
 

@@ -13,6 +13,10 @@
     "noImplicitAny": true,
     "strictNullChecks": true,
     "forceConsistentCasingInFileNames": true,
+
+    "paths": {
+      "@lib/*": ["../lib/*"],
+    }
   },
   "include": ["src/**/*.ts"]
 }

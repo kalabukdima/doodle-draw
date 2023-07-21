@@ -1,5 +1,5 @@
 import * as socketio from "socket.io-client";
-import { Position, Direction, InitParams, ClientToServerEvents, ServerToClientEvents } from "../src/events";
+import { Position, Direction, InitParams, ClientToServerEvents, ServerToClientEvents } from "@lib/events";
 
 type Socket = socketio.Socket<ServerToClientEvents, ClientToServerEvents>;
 

@@ -1,4 +1,3 @@
-// Currently unused
 {
   "compilerOptions": {
     "target": "ES2015",
@@ -7,13 +6,16 @@
     "esModuleInterop": true,
     "moduleResolution": "Bundler",
 
-    "rootDir": "./client",
-    "outDir": "./static/dist",
+    "rootDir": "./src",
+    "outDir": "./dist",
 
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
     "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "@lib/*": ["../lib/*"],
+    }
   },
-  "include": ["client/**/*.ts"]
+  "include": ["src/**/*.ts"]
 }
