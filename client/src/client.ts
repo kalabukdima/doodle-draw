@@ -1,9 +1,15 @@
+localStorage.debug = '*';
+
 import * as socketio from "socket.io-client";
 import { Position, Direction, InitParams, ClientToServerEvents, ServerToClientEvents } from "@lib/events";
 
 type Socket = socketio.Socket<ServerToClientEvents, ClientToServerEvents>;
 
 const URL = process.env["API_URL"] ?? "http://localhost:3000";
+
+function toViewPos(pos: Position): Position {
+    return { x: pos.x * 800, y: pos.y * 800 };
+}
 
 interface State {
     onNewPos: (data: Position) => void;
@@ -29,11 +35,11 @@ class ActiveState implements State {
         this.socket = socket;
         this.context = context;
         this.allowedMoves = params.allowed;
-        this.lastPos = { x: params.pos.x, y: params.pos.y };
+        this.lastPos = toViewPos(params.pos);
     }
 
-    onNewPos(data: Position) {
-        const newPos = { x: data.x * 800, y: data.y * 800 };
+    onNewPos(pos: Position) {
+        const newPos = toViewPos(pos);
         this.context.beginPath();
         this.context.moveTo(this.lastPos.x, this.lastPos.y);
         this.context.lineTo(newPos.x, newPos.y);
@@ -42,17 +48,21 @@ class ActiveState implements State {
     }
 
     onMovement(direction: Direction) {
-        this.socket.emit(direction);
+        this.socket.emit("set_direction", direction);
     }
 
     onStopMovement() {
-        this.socket.emit("stop");
+        this.socket.emit("set_direction", undefined);
     }
 }
 
+let socket: Socket;
+
 function run() {
     console.log("Connecting to", URL);
-    const socket: Socket = socketio.io(URL);
+    socket = socketio.io(URL, {
+        transports: ["websocket"],
+    });
 
     const canvas = document.querySelector("canvas")!;
     canvas.width = window.innerWidth;
@@ -63,9 +73,12 @@ function run() {
 
     let state: State = new UninitializedState();
 
-    socket.on("init", (params: InitParams) => {
-        console.log("initialized");
-        state = new ActiveState(socket, context, params);
+    socket.emit("join", "the-room", response => {
+        if (response.status === "error") {
+            return console.error("Couldn't connect to the room:", response.message);
+        }
+        console.log("Joined room", response.result);
+        state = new ActiveState(socket, context, response.result);
     });
 
     socket.on("new_pos", (data: Position) => {

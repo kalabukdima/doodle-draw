@@ -11,16 +11,20 @@ export type InitParams = {
     pos: Position;
 };
 
+export type Result<T> = {
+    status: "ok";
+    result: T;
+} | {
+    status: "error";
+    message: string;
+};
+
 
 export type ServerToClientEvents = {
-    init: (params: InitParams) => void;
     new_pos: (pos: Position) => void;
 };
 
 export type ClientToServerEvents = {
-    stop: () => void;
-    left: () => void;
-    right: () => void;
-    up: () => void;
-    down: () => void;
+    join: (room: string, callback: (response: Result<InitParams>) => void) => void;
+    set_direction: (dir: Direction | undefined) => void;
 }
