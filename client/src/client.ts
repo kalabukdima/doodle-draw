@@ -3,6 +3,8 @@ import { Position, Direction, InitParams, ClientToServerEvents, ServerToClientEv
 
 type Socket = socketio.Socket<ServerToClientEvents, ClientToServerEvents>;
 
+const URL = process.env["API_URL"] ?? "http://localhost:3000";
+
 interface State {
     onNewPos: (data: Position) => void;
     onMovement: (direction: Direction) => void;
@@ -49,7 +51,8 @@ class ActiveState implements State {
 }
 
 function run() {
-    const socket: Socket = socketio.io("http://localhost:3000");
+    console.log("Connecting to", URL);
+    const socket: Socket = socketio.io(URL);
 
     const canvas = document.querySelector("canvas")!;
     canvas.width = window.innerWidth;
